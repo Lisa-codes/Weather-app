@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <style>
+        .container {
+    width: 500px;
+    height: 300px;
+    background-color: white;
+    display: block;
+    margin: 70px auto;
+    padding: 30px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08);
+    font-weight: 200;
+}
+
+form {
+    margin: 5px;
+}
+a{
+    color: #885df1;
+}
+.main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-button {
+    background-color: #885df1;
+    color: white;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.text-input {
+    background-color: lightgray;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    width: 400px;
+}
+
+.humid {
+    color: #f65282;
+}
+
+.wind {
+    color: #f65282;
+}
+
+.temperature {
+    font-size: 40px;
+    font-weight: bold;
+    right: 20px;
+    margin-left: auto;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 50px 0;
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    <form id="weatherForm">
+        <input type="text" id="cityInput" placeholder="Enter a city" class="text-input">
+        <input type="submit" value="Search" class="text-button">
+    </form> <br />
+    <hr />
+    <div class="main" id="weatherInfo">
+        <div class="weather-info">
+           
+        </div>
+    </div>
+    <footer>
+        <p> This project was coded by <a href="#">Lisa Njeri</a> and is on <a href=" ">Github</a> and
+            hosted on<a href=" "> Netlify</a></p>
+    </footer>
+</div>
+
+    <script>
+        document.getElementById('weatherForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const city = document.getElementById('cityInput').value.trim(); 
+            getWeatherData(city);
+        });
+
+        async function getWeatherData(city) {
+            const apiKey = '334b08829259dbd8957c7c3e3ad51e9c'; 
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                const weatherDescription = data.weather[0].description;
+                const temperature = data.main.temp;
+                const humidity = data.main.humidity;
+                const windSpeed = data.wind.speed;
+
+                const weatherInfoDiv = document.getElementById('weatherInfo');
+                const weatherInfo = `
+                    <div class="weather-info">
+                        <h1>${city}</h1>
+                        ${weatherDescription} <br />
+                        Humidity: <span class="humid"><strong>${humidity}%</strong> </span>, 
+                        Wind: <span class="wind"><strong>${windSpeed} km/h</strong> </span>
+                    </div>
+                    <div class="temperature">
+                        <p>&#x1f31e; ${temperature}&#xb0;C</p>
+                    </div>
+                `;
+              
+                weatherInfoDiv.innerHTML += weatherInfo;
+
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                alert('Error fetching weather data. Please try again later.');
+            }
+        }
+    </script>
+</body>
+
+</html>
